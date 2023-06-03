@@ -1,21 +1,16 @@
-from classes import salvarSenhas, mostraSenhas
+from funcoes import acessarConta, criarConta
 
-print("======= Gerenciador de senhas =======")
-while True:
-    opcao = input("1 - Ver senhas salvar\n2 - Adicionar uma nova senha\n-aperte ENTER para sair-\n")
-    if opcao == '1' or opcao == '2' or opcao == '':
-        break
+with open("senhas_salvas.txt", "r", encoding="utf-8") as senhas:
+    temSenhas = senhas.read()
 
-    else:
-        print("Digite uma opção válida")
-
-if opcao == '1':
-    pass
-elif opcao == '2':
+if temSenhas:
     while True:
-        salvarSenhas(input("Digite o nome da senha: "),
-                     input("Senha: "))
-        if input("Deseja salvar outra senha?\n1 - SIM\n2 - NÃO\n") == '1':
-            continue
-        else:
-            break
+        try:
+            acessarConta(int(input("Digite sua senha de acesso\nSenha: ")))
+        except:
+            print('Você digitou a senha errada, tente novamente')
+else:
+    criarConta()
+
+
+
