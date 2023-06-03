@@ -1,4 +1,4 @@
-from classes import Senha
+from classes import salvarSenhas, mostraSenhas
 
 print("======= Gerenciador de senhas =======")
 while True:
@@ -12,6 +12,10 @@ while True:
 if opcao == '1':
     pass
 elif opcao == '2':
-    senha = Senha(nome_senha=input("Digite o nome da senha: "), senha=input("Digite a senha: "))
-    senha.criptografar(senha.senha)
-    senha.salvar()
+    while True:
+        salvarSenhas(input("Digite o nome da senha: "),
+                     input("Senha: "))
+        if input("Deseja salvar outra senha?\n1 - SIM\n2 - NÃO\n") == '1':
+            continue
+        else:
+            break
