@@ -145,9 +145,19 @@ def mostraSenhas():
         print(''.join(senhasDescrip))
 
 
-def salvarSenha(nome_senha, senha):
+def atualizarSenha():
+    # a fazer
+    pass
+
+
+def removerSenha():
+    # a fazer
+    pass
+
+
+def salvarSenha(nomeSenha, senha):
     with open("senhas_salvas.txt", "a", encoding="utf-8") as senhas:
-        senhas.write(f"{nome_senha}: {criptografarSenha(senha)}\n")
+        senhas.write(f"{nomeSenha}: {criptografarSenha(senha)}\n")
 
 
 def tchau():
