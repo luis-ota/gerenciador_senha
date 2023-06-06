@@ -17,7 +17,7 @@ if temConta:
                         primeiroAcesso = False
                         print("\x1b[2J\x1b[1;1H")
                         break
-                    elif opcao=='2':
+                    elif opcao == '2':
                         break
                     else:
                         print("\x1b[2J\x1b[1;1H")

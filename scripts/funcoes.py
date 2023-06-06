@@ -1,4 +1,5 @@
 senhaGerenciador = 0
+listaSenhas = []
 
 
 def criarConta():
@@ -11,8 +12,8 @@ def criarConta():
                                          "(não começe a senha com 0)\n"
                                          "Senha: "))
             if len(str(senhaGerenciador)) == 5 and str(senhaGerenciador)[0] != '-' and senhaGerenciador != 0:
-                with open("verificar.txt", "w", encoding="utf-8") as senhas:
-                    senhas.write(f"{criptografarSenha('verificar')}")
+                with open("verificar.txt", "w", encoding="utf-8") as verificar:
+                    verificar.write(f"{criptografarSenha('verificar')}")
                 print("\nSenha criada com sucesso!!")
                 menuInicial()
                 break
@@ -97,7 +98,7 @@ def menuInicial():
     elif opcao == '2':
         nome = input("\nDigite o nome da senha: ")
         senha = input("Senha: ")
-        salvarSenha(nome, senha)
+        adicionarSenha(nome, senha)
         print("\x1b[2J\x1b[1;1H")
         print("\n**Senha adicionada com sucesso!**")
         menuInicial()
@@ -137,25 +138,56 @@ def mostraSenhas():
     print("\x1b[2J\x1b[1;1H")
     with open("senhas_salvas.txt", 'r', encoding='utf-8') as senhasSalvas:
         senhas = senhasSalvas.read().split('\n')[:-1]
-        senhasDescrip = ['\n', 'Nome | Senha\n']
+        senhasDescrip = ['\nID| Nome | Senha\n']
         for senha in senhas:
             senhaNome = senha.split(':')[0]
             senhaDescrip = descriptografarSenha(senha.split(':')[-1][1:])
-            senhasDescrip.append(f"{senhaNome}: {senhaDescrip}\n")
+            senhasDescrip.append(f"{senhas.index(senha) + 1}. {senhaNome}: {senhaDescrip}\n")
         print(''.join(senhasDescrip))
+        '''
+        a = True
+        while a:
+            opcao = input("1 - Atualizar senha\n2 - Remover senha\n3 - \n")
+            if opcao == '1' or opcao == '2' or opcao == '3':
+                if opcao == '1':
+                    idSenha = input("Digite o ID da senha: ")
+                    atualizarSenha(idSenha)
+                elif opcao == '2':
+                    idSenha = input("Digite o ID da senha: ")
+                    removerSenha(idSenha)
+                elif opcao == '3':
+                    a = False
+            else:
+                print("\x1b[2J\x1b[1;1H")
+                print("**Digite uma opção válida**")
+                print("\n======= Gerenciador de senhas =======\n")
+        '''
+
+def atualizarSenha(idSenha):
+    '''
+    print("\x1b[2J\x1b[1;1H")
+    with open("senhas_salvas.txt", 'r', encoding='utf-8') as senhasLeitura:
+        listaSenhas = senhasLeitura.read().split('\n')[:-1]
+
+    with open("senhas_salvas.txt", 'w', encoding='utf-8') as senhasEscrita:
+        nomeSenha = input("Digite o novo nome da senha: ")
+        senha = input("Digite a nova senha: ")
+        listaSenhas[int(idSenha) - 1] = f"\n{nomeSenha}: {criptografarSenha(senha)}\n"
+        senhasAtualizadas = "".join(listaSenhas)
+        senhasEscrita.write(senhasAtualizadas)
+        senhasEscrita.close()
+        print("Senha atualizada com sucesso!!")
+        menuInicial()
+    '''
+    pass
 
 
-def atualizarSenha():
+def removerSenha(idSenha):
     # a fazer
     pass
 
 
-def removerSenha():
-    # a fazer
-    pass
-
-
-def salvarSenha(nomeSenha, senha):
+def adicionarSenha(nomeSenha, senha):
     with open("senhas_salvas.txt", "a", encoding="utf-8") as senhas:
         senhas.write(f"{nomeSenha}: {criptografarSenha(senha)}\n")
 
@@ -179,5 +211,6 @@ def tchau():
         "⣿⣿⣿⣿⣶⣄⠄⠈⠉⠁⠄⣸⣿⣄⠄⠈⠻⣿⣿⣿⣿⣿⣿⠿⠃⠄⣠⣿⣿⣿\n"
         "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⡀⢀⢀⢀⢀⢀⢀⣠⣴⣿⣿⣿⣿\n"
         "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n"
-        "tchau"
+        "tchau\n"
+        "Desenvolido por GDP® LTDA 2023"
     )
