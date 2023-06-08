@@ -30,15 +30,15 @@ if temConta:
                 excluirConta(primeiroAcesso=True)
                 a = False
                 break
-
-
         except ValueError as e:
             tentativa += 1
             if tentativa == 4:
-                print("\nVocê errou a senha mais de 3 vezes, encerrando programa")
+                print("\x1b[2J\x1b[1;1H")
+                print(f'{chr(128545)}{chr(128545)}{chr(128545)}{chr(128545)}{chr(128545)}\n'
+                      "\nVocê errou a senha mais de 3 vezes, encerrando programa")
                 a = False
             else:
-                print('\nSenha incorreta, tente novamente')
+                print(f'\nSenha incorreta, tente novamente')
         except:
             tentativa += 1
             print("**Senha inválida, tente uma nova senha**")

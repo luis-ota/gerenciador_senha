@@ -14,6 +14,7 @@ def criarConta():
             if len(str(senhaGerenciador)) == 5 and str(senhaGerenciador)[0] != '-' and senhaGerenciador != 0:
                 with open("verificar.txt", "w", encoding="utf-8") as verificar:
                     verificar.write(f"{criptografarSenha('verificar')}")
+                    verificar.close()
                 print("\nSenha criada com sucesso!!")
                 menuInicial()
                 break
@@ -21,7 +22,7 @@ def criarConta():
                 print("\x1b[2J\x1b[1;1H")
                 print("\nVocê digitou uma senha inválida, tente novamente")
 
-        except ValueError as e:
+        except ValueError:
             print("\x1b[2J\x1b[1;1H")
             print("\nVocê digitou uma senha inválida, tente novamente")
 
@@ -32,8 +33,10 @@ def excluirConta(primeiroAcesso=False):
         if opcao == 'S' or opcao == 's':
             with open('verificar.txt', 'w', encoding='utf8') as verificar:
                 verificar.write('')
+                verificar.close()
             with open('senhas_salvas.txt', 'w', encoding='utf-8') as senhas:
                 senhas.write('')
+                senhas.close()
                 print("\n\nConta excluida com sucesso!!")
                 tchau()
                 break
@@ -60,9 +63,13 @@ def acessarConta(senha):
 
 
 def menuInicial():
+    global listaSenhas
     print("\n======= Gerenciador de senhas =======\n")
     while True:
-        opcao = input("1 - Ver senhas salvas\n2 - Adicionar uma nova senha\n3 - Excluir conta\n4 - SAIR\n")
+        opcao = input("1 - Ver senhas salvas\n"
+                      "2 - Adicionar uma nova senha\n"
+                      "3 - Excluir conta\n"
+                      "4 - SAIR\n")
         if opcao == '1' or opcao == '2' or opcao == '3' or opcao == '4':
             break
 
@@ -74,21 +81,89 @@ def menuInicial():
     if opcao == '1':
         with open("senhas_salvas.txt", "r", encoding="utf-8") as senhas:
             temSenhas = senhas.read()
+            senhas.close()
         if temSenhas:
+            print("\x1b[2J\x1b[1;1H")
             mostraSenhas()
             while True:
-                opcao = input("1 - Voltar ao menu inicial\n2 - SAIR\n")
+                opcao = input("----------------------------------------\n\n"
+                              "1 - Adicionar senha\n"
+                              "2 - Atualizar senha\n"
+                              "3 - Remover senha\n"
+                              "4 - Voltar ao menu inicial\n"
+                              "5 - SAIR\n")
                 if opcao == '1':
+                    nome = input("\nDigite o nome da senha (0 para cancelar): ")
+                    if nome == '0':
+                        menuInicial()
+                        break
+                    else:
+                        adicionarSenha(nome, input("Senha: "))
+                        print("\x1b[2J\x1b[1;1H")
+                        print("\n**Senha adicionada com sucesso!!**")
+                        menuInicial()
+                        break
+                if opcao == '2':
+                    print("\x1b[2J\x1b[1;1H")
+                    with open("senhas_salvas.txt", 'r', encoding='utf-8') as senhasLeitura:
+                        listaSenhas = senhasLeitura.read().split('\n')[:-1]
+                        senhasLeitura.close()
+                    while True:
+                        try:
+                            mostraSenhas()
+                            idSenha = int(input("Digite o ID da senha que deseja atualizar (0 para cancelar): "))
+                            if idSenha in range(1, len(listaSenhas) + 1):
+                                atualizarSenha(idSenha)
+                                break
+                            elif idSenha == 0:
+                                print("\x1b[2J\x1b[1;1H")
+                                menuInicial()
+                                break
+                            else:
+                                print("\x1b[2J\x1b[1;1H")
+                                print('**Digite uma opção valida**')
+                                continue
+                        except:
+                            print("\x1b[2J\x1b[1;1H")
+                            print('**Digite uma opção valida**')
+                            continue
+                    break
+
+                elif opcao == '3':
+                    print("\x1b[2J\x1b[1;1H")
+                    with open("senhas_salvas.txt", 'r', encoding='utf-8') as senhasLeitura:
+                        listaSenhas = senhasLeitura.read().split('\n')[:-1]
+                        senhasLeitura.close()
+                    while True:
+                        try:
+                            mostraSenhas()
+                            idSenha = int(input("Digite o ID da senha que deseja remover (0 para cancelar): "))
+                            if idSenha in range(1, len(listaSenhas) + 1):
+                                removerSenha(idSenha)
+                                break
+                            elif idSenha == 0:
+                                print("\x1b[2J\x1b[1;1H")
+                                menuInicial()
+                                break
+                            else:
+                                print("\x1b[2J\x1b[1;1H")
+                                print('\n**Digite uma opção valida**')
+                                continue
+                        except:
+                            print("\x1b[2J\x1b[1;1H")
+                            print('\n**Digite uma opção valida**')
+                            continue
+                    break
+                if opcao == '4':
                     print("\x1b[2J\x1b[1;1H")
                     menuInicial()
                     break
-                if opcao == '2':
+                if opcao == '5':
                     tchau()
                     break
-                if opcao != '1' and opcao != '2':
+                if opcao != '1' and opcao != '2' and opcao != '3' and opcao != '4' and opcao != '5':
                     print("\x1b[2J\x1b[1;1H")
                     print("\n**Digite uma opção válida**")
-
                 else:
                     pass
         else:
@@ -96,9 +171,7 @@ def menuInicial():
             print("**Você não possuí senhas salvas**")
             menuInicial()
     elif opcao == '2':
-        nome = input("\nDigite o nome da senha: ")
-        senha = input("Senha: ")
-        adicionarSenha(nome, senha)
+        adicionarSenha(input("\nDigite o nome da senha: "), input("Senha: "))
         print("\x1b[2J\x1b[1;1H")
         print("\n**Senha adicionada com sucesso!**")
         menuInicial()
@@ -114,6 +187,7 @@ def menuInicial():
 def verificarSenha():
     with open("verificar.txt", "r", encoding="utf-8") as verificar:
         v = verificar.read()
+        verificar.close()
     if descriptografarSenha(v) == 'verificar':
         return True
 
@@ -135,61 +209,59 @@ def descriptografarSenha(key):
 
 
 def mostraSenhas():
-    print("\x1b[2J\x1b[1;1H")
     with open("senhas_salvas.txt", 'r', encoding='utf-8') as senhasSalvas:
         senhas = senhasSalvas.read().split('\n')[:-1]
-        senhasDescrip = ['\nID| Nome | Senha\n']
+        senhasDescrip = ['\n ID |        Nome        |         Senha\n'
+                         '----------------------------------------\n']
         for senha in senhas:
             senhaNome = senha.split(':')[0]
             senhaDescrip = descriptografarSenha(senha.split(':')[-1][1:])
-            senhasDescrip.append(f"{senhas.index(senha) + 1}. {senhaNome}: {senhaDescrip}\n")
+            senhasDescrip.append(f" {senhas.index(senha) + 1:<5} {senhaNome:^18} {senhaDescrip:>14}\n")
         print(''.join(senhasDescrip))
-        '''
-        a = True
-        while a:
-            opcao = input("1 - Atualizar senha\n2 - Remover senha\n3 - \n")
-            if opcao == '1' or opcao == '2' or opcao == '3':
-                if opcao == '1':
-                    idSenha = input("Digite o ID da senha: ")
-                    atualizarSenha(idSenha)
-                elif opcao == '2':
-                    idSenha = input("Digite o ID da senha: ")
-                    removerSenha(idSenha)
-                elif opcao == '3':
-                    a = False
-            else:
-                print("\x1b[2J\x1b[1;1H")
-                print("**Digite uma opção válida**")
-                print("\n======= Gerenciador de senhas =======\n")
-        '''
+        senhasSalvas.close()
+
 
 def atualizarSenha(idSenha):
-    '''
+    global listaSenhas
     print("\x1b[2J\x1b[1;1H")
-    with open("senhas_salvas.txt", 'r', encoding='utf-8') as senhasLeitura:
-        listaSenhas = senhasLeitura.read().split('\n')[:-1]
-
     with open("senhas_salvas.txt", 'w', encoding='utf-8') as senhasEscrita:
-        nomeSenha = input("Digite o novo nome da senha: ")
-        senha = input("Digite a nova senha: ")
-        listaSenhas[int(idSenha) - 1] = f"\n{nomeSenha}: {criptografarSenha(senha)}\n"
-        senhasAtualizadas = "".join(listaSenhas)
+        print(f"Você está atualizando a senha: {listaSenhas[int(idSenha) - 1].split(': ')[0]}\n")
+        listaSenhas[int(idSenha) - 1] = f"{input('Digite o novo nome da senha: ')}: " \
+                                        f"{criptografarSenha(input('Digite a nova senha: '))}"
+
+        listaSenhasCorrigida = []
+        for senha in listaSenhas:
+            senha += '\n'
+            listaSenhasCorrigida.append(senha)
+        senhasAtualizadas = "".join(listaSenhasCorrigida)
         senhasEscrita.write(senhasAtualizadas)
         senhasEscrita.close()
-        print("Senha atualizada com sucesso!!")
+        print("\x1b[2J\x1b[1;1H")
+        print("\n**Senha atualizada com sucesso!!**")
         menuInicial()
-    '''
-    pass
 
 
 def removerSenha(idSenha):
-    # a fazer
-    pass
+    global listaSenhas
+    print("\x1b[2J\x1b[1;1H")
+    with open("senhas_salvas.txt", 'w', encoding='utf-8') as senhasEscrita:
+        del listaSenhas[int(idSenha) - 1]
+        listaSenhasCorrigida = []
+        for senha in listaSenhas:
+            senha += '\n'
+            listaSenhasCorrigida.append(senha)
+        senhasAtualizadas = "".join(listaSenhasCorrigida)
+        senhasEscrita.write(senhasAtualizadas)
+        senhasEscrita.close()
+        print("\x1b[2J\x1b[1;1H")
+        print("\n**Senha removida com sucesso!!**")
+        menuInicial()
 
 
 def adicionarSenha(nomeSenha, senha):
     with open("senhas_salvas.txt", "a", encoding="utf-8") as senhas:
         senhas.write(f"{nomeSenha}: {criptografarSenha(senha)}\n")
+        senhas.close()
 
 
 def tchau():
