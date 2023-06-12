@@ -216,7 +216,7 @@ def mostraSenhas():
         for senha in senhas:
             senhaNome = senha.split(':')[0]
             senhaDescrip = descriptografarSenha(senha.split(':')[-1][1:])
-            senhasDescrip.append(f" {senhas.index(senha) + 1:<5} {senhaNome:^18} {senhaDescrip:>14}\n")
+            senhasDescrip.append(f" {senhas.index(senha) + 1:<5} {senhaNome:^17} {senhaDescrip:>15}\n")
         print(''.join(senhasDescrip))
         senhasSalvas.close()
 
