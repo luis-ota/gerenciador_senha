@@ -1,4 +1,4 @@
-from funcoes import acessarConta, criarConta, excluirConta
+from funcoes import acessarConta, criarConta, excluirConta, getpass
 
 with open("verificar.txt", "r", encoding="utf-8") as senhas:
     temConta = senhas.read()
@@ -24,7 +24,7 @@ if temConta:
                         print("**Você digitou uma opção inválida**\n")
                         break
             if opcao == '1':
-                acessarConta(int(input("Digite sua senha de acesso\nSenha: ")))
+                acessarConta(int(getpass("Digite sua senha de acesso\nSenha: ")))
                 a = False
             elif opcao == '2':
                 excluirConta(primeiroAcesso=True)

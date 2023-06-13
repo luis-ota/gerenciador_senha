@@ -1,3 +1,6 @@
+from getpass import getpass
+
+
 senhaGerenciador = 0
 listaSenhas = []
 
@@ -7,7 +10,7 @@ def criarConta():
     print("\n======= Gerenciador de senhas =======")
     while True:
         try:
-            senhaGerenciador = int(input("\nCrie uma senha de 5 dígitos para acessar o geenciador\n"
+            senhaGerenciador = int(getpass("\nCrie uma senha de 5 dígitos para acessar o geenciador\n"
                                          "(use apenas números)\n"
                                          "(não começe a senha com 0)\n"
                                          "Senha: "))
